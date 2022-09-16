@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let toss = ["Head", "Tail"]; //coin outputs
+        coinToss = { playerCount: 0, computerCount: 0 };
+        finalResult = []
+        function tossingCount() {
+
+            human = toss[Math.floor(Math.random() * 2)];
+            system = toss[Math.floor(Math.random() * 2)];
+
+            if (human == "Head") {
+                coinToss.playerCount += 1;
+            }
+            if (system == "Head") {
+                coinToss.computerCount += 1;
+            }
+            finalResult.push({ "Round": interval, "Toss": tossSec + 1, "Player": human, "Computer": system, "playerPoint": coinToss.playerCount, "ComputerPoint": coinToss.computerCount })
+            console.log("Player :", human);
+            console.log("Computer: ", system);
+        }
+        function coinTossGame() {
+            tossSec = 0;
+            tossInterval = setInterval(() => {
+                if (tossSec == 10) {
+                    if (coinToss.playerCount > coinToss.computerCount) {
+                        winner=(coinToss.playerCount - coinToss.computerCount)
+                        console.log("Winner is Player by", winner)
+                    }   
+                    else if (coinToss.playerCount < coinToss.computerCount) {
+                        winner=(coinToss.computerCount - coinToss.playerCount)
+                        console.log("Winner is Computer by", winner)
+                    }
+                    else {
+                        console.log("The Match is Draw")
+                    }     
+                    clearInterval(tossInterval);
+
+                    console.log("Count: ", coinToss); //diplsy the each round result
+
+                } else {
+                    console.log("Toss: ", tossSec + 1);
+                    tossingCount(); //call the function & store it in a variable
+                    tossSec++;
+                }
+            }, 1000);
+        }
+
+        interval = 0;
+        secondInterval = setInterval(
+            (function game() {
+                if (interval == 4) {
+                    clearInterval(secondInterval);
+                    csvfileForResult()
+                } else {
+                    console.log("Round: ", interval + 1);
+                    coinTossGame();
+
+                    interval++;
+                    return game;
+                }
+                console.table(finalResult)
+                if (coinToss.playerCount > coinToss.computerCount) {
+                    console.log("\n********Winner in this game is PLAYER with ", +coinToss.playerCount, " points ********\n")
+                }
+                else if (coinToss.playerCount < coinToss.computerCount) {
+                    console.log("\n********Winner in this game is COMPUTER with ", +coinToss.computerCount, " points ********\n")
+                }
+                else if (coinToss.playerCount == coinToss.computerCount) {
+                    console.log("\n********Both are got EQUAL POINTS ********\n")
+                }
+            })(),
+            15000
+        );
+
+
+        function csvfileForResult() {
+            cs = ""
+            cs += "Round,Toss,Player,Computer,Player Point,Computer Point,Winner"
+            cs += "\r\n"
+            for (i of finalResult) {
+                cs += i.Round + "," + i.Toss + "," + i.Player + "," + i.Computer + "," + i.playerPoint + "," + i.ComputerPoint +","+i.Winner
+                cs += "\r\n"
+            }
+            console.log(cs)
+            let tempBloB = new Blob([cs], { type: "text\Csv" })
+
+            let tempUrl = window.URL.createObjectURL(tempBloB)
+            let activation = document.createElement("a")
+            activation.href = tempUrl
+            activation.download = "coinTossMatchResult.csv"
+            activation.click()
+            window.URL.revokeObjectURL(tempUrl)
+            activation.remove()
+        }
+    </script>
+</body>
+</html>
