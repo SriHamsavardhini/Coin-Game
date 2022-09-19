@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <script>
         let toss = ["Head", "Tail"]; //coin outputs
@@ -26,32 +28,39 @@
             console.log("Player :", human);
             console.log("Computer: ", system);
         }
+
+        win = []
         function coinTossGame() {
             tossSec = 0;
+
             tossInterval = setInterval(() => {
                 if (tossSec == 10) {
                     if (coinToss.playerCount > coinToss.computerCount) {
-                        winner=(coinToss.playerCount - coinToss.computerCount)
+                        winner = (coinToss.playerCount - coinToss.computerCount)
+                        win.push("player")
                         console.log("Winner is Player by", winner)
-                    }   
+                    }
                     else if (coinToss.playerCount < coinToss.computerCount) {
-                        winner=(coinToss.computerCount - coinToss.playerCount)
+                        winner = (coinToss.computerCount - coinToss.playerCount)
+                        win.push("computer")
                         console.log("Winner is Computer by", winner)
                     }
                     else {
                         console.log("The Match is Draw")
-                    }     
+                        win.push("none")
+                    }
                     clearInterval(tossInterval);
 
                     console.log("Count: ", coinToss); //diplsy the each round result
 
                 } else {
                     console.log("Toss: ", tossSec + 1);
-                    tossingCount(); //call the function & store it in a variable
+                    tossingCount(); //call the function 
                     tossSec++;
                 }
             }, 1000);
         }
+
 
         interval = 0;
         secondInterval = setInterval(
@@ -85,9 +94,23 @@
             cs = ""
             cs += "Round,Toss,Player,Computer,Player Point,Computer Point,Winner"
             cs += "\r\n"
+            tossTime = 10 - 1
+            round = 0
             for (i of finalResult) {
-                cs += i.Round + "," + i.Toss + "," + i.Player + "," + i.Computer + "," + i.playerPoint + "," + i.ComputerPoint +","+i.Winner
+                cs += i.Round + "," + i.Toss + "," + i.Player + "," + i.Computer + "," + i.playerPoint + "," + i.ComputerPoint
                 cs += "\r\n"
+                if (finalResult.indexOf(i) == tossTime) {
+                    cs += "winner" + ":" + win[round]
+                    cs += "\r\n"
+                    tossTime = 10
+                    round++
+                    if (round == 4) {
+                        cs += "\r\n"
+                        cs += "Final Winner " + ":" + win[round - 1]
+                        cs += "\r\n"
+
+                    }
+                }
             }
             console.log(cs)
             let tempBloB = new Blob([cs], { type: "text\Csv" })
@@ -102,4 +125,5 @@
         }
     </script>
 </body>
+
 </html>
